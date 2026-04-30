@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Basic Configurations</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F7F7F5;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --text-primary: #1A1A18;
+    --text-secondary: #5C5C58;
+    --text-hint: #9A9A96;
+    --accent: #2176B8;
+    --accent-light: #E3F0FA;
+    --accent-text: #0C447C;
+    --topbar-bg: #2D8DD4;
+    --topbar-hover: #1F6FA8;
+    --topbar-active: #145A90;
+    --success-bg: #EAF3DE;
+    --success-border: #97C459;
+    --success-text: #3B6D11;
+    --warning-dot: #BA7517;
+    --radius-sm: 6px;
+    --radius-md: 9px;
+    --radius-lg: 13px;
+    --font: 'DM Sans', sans-serif;
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+  /* TOP NAV */
+  .topbar { background: var(--topbar-bg); height: 54px; display: flex; align-items: center; padding: 0 14px; position: sticky; top: 0; z-index: 100; gap: 4px; }
+  .nav-btn {
+    font-family: var(--font); font-size: 12px; font-weight: 500; line-height: 1.25;
+    padding: 6px 14px; border: none; border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.92);
+    cursor: pointer; white-space: nowrap; text-align: center; transition: background 0.14s;
+    min-width: 68px;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.25); }
+  .nav-btn.active { background: var(--topbar-active); color: #fff; }
+  .nav-btn.logout { margin-left: auto; background: rgba(0,0,0,0.15); }
+  .nav-btn.logout:hover { background: rgba(0,0,0,0.25); }
+
+  /* LAYOUT */
+  .layout { display: flex; min-height: calc(100vh - 54px); }
+
+  /* SIDEBAR */
+  .sidebar { width: 206px; flex-shrink: 0; background: var(--surface); border-right: 0.5px solid var(--border); padding: 16px 10px; position: sticky; top: 54px; height: calc(100vh - 54px); overflow-y: auto; }
+  .sidebar-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-hint); padding: 0 8px; margin-bottom: 4px; margin-top: 14px; }
+  .sidebar-group-label:first-child { margin-top: 0; }
+  .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: var(--radius-sm); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; transition: background 0.12s, color 0.12s; }
+  .sidebar-item:hover { background: #F0F0EC; color: var(--text-primary); }
+  .sidebar-item.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
+  .sidebar-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  /* MAIN */
+  .main { flex: 1; padding: 24px 26px 100px; max-width: 860px; }
+  .page-header { margin-bottom: 18px; }
+  .page-header h1 { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 3px; }
+  .page-header p { font-size: 13px; color: var(--text-secondary); }
+
+  /* SEARCH */
+  .search-wrap { position: relative; margin-bottom: 14px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-hint); pointer-events: none; }
+  .search-wrap input { width: 100%; padding: 8px 12px 8px 32px; font-family: var(--font); font-size: 13px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--text-primary); transition: border-color 0.15s, box-shadow 0.15s; }
+  .search-wrap input::placeholder { color: var(--text-hint); }
+  .search-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+
+  /* SUCCESS BANNER */
+  .success-banner { display: none; align-items: center; gap: 8px; background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: var(--success-text); margin-bottom: 14px; }
+  .success-banner.show { display: flex; }
+  .success-banner svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* SECTION CARD */
+  .section-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; cursor: pointer; user-select: none; transition: background 0.12s; }
+  .section-header:hover { background: #F9F9F7; }
+  .section-header-left { display: flex; align-items: center; gap: 11px; }
+  .sec-icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sec-icon svg { width: 13px; height: 13px; }
+  .sec-icon.blue { background: #E3F0FA; color: #185FA5; }
+  .sec-icon.green { background: #EAF3DE; color: #3B6D11; }
+  .sec-icon.amber { background: #FAEEDA; color: #854F0B; }
+  .sec-icon.red { background: #FCEBEB; color: #A32D2D; }
+  .sec-title { font-size: 13.5px; font-weight: 500; color: var(--text-primary); }
+  .sec-sub { font-size: 11.5px; color: var(--text-hint); margin-top: 1px; }
+  .chevron { width: 15px; height: 15px; color: var(--text-hint); transition: transform 0.2s; flex-shrink: 0; }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* SECTION BODY */
+  .section-body { border-top: 0.5px solid var(--border); display: none; }
+  .section-body.open { display: block; }
+
+  /* FIELD ROW */
+  .field-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 13px 16px; border-bottom: 0.5px solid var(--border); gap: 16px; }
+  .field-row:last-child { border-bottom: none; }
+  .field-row.hidden { display: none; }
+  .field-meta { flex: 1; min-width: 0; }
+  .field-label { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .field-hint { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
+  .field-ctrl { flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; min-width: 182px; }
+
+  /* DEV NOTE */
+  .dev-note { display: inline-flex; align-items: center; gap: 6px; background: #FFF8E6; border: 0.5px solid #EFD080; border-radius: var(--radius-sm); padding: 5px 9px; font-size: 11.5px; color: #7A5A00; margin-top: 6px; }
+  .dev-note svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  /* FORM CONTROLS */
+  select, input[type=text], input[type=password] {
+    font-family: var(--font); font-size: 13px; padding: 7px 10px;
+    border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text-primary); width: 182px;
+    appearance: none; -webkit-appearance: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%239A9A96' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center; padding-right: 26px;
+  }
+  select:focus, input[type=text]:focus, input[type=password]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .inline-pair { display: flex; gap: 6px; }
+  .inline-pair input { width: 86px; }
+  textarea { font-family: var(--font); font-size: 12.5px; padding: 7px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); width: 182px; resize: vertical; min-height: 58px; }
+  textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+
+  /* TOGGLE */
+  .toggle-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .toggle-track { width: 36px; height: 20px; border-radius: 10px; background: #CCC; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .toggle-track.on { background: var(--accent); }
+  .toggle-thumb { width: 16px; height: 16px; border-radius: 50%; background: white; position: absolute; top: 2px; left: 2px; transition: left 0.2s; }
+  .toggle-track.on .toggle-thumb { left: 18px; }
+  .toggle-label { font-size: 13px; color: var(--text-secondary); min-width: 22px; }
+
+  /* RADIO */
+  .radio-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .radio-opt { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .radio-opt input[type=radio] { width: auto; padding: 0; border: none; accent-color: var(--accent); }
+  .radio-opt span { font-size: 13px; color: var(--text-primary); }
+
+  /* TEST BUTTON */
+  .btn-test { font-family: var(--font); font-size: 12px; padding: 5px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); background: transparent; color: var(--text-secondary); cursor: pointer; margin-top: 6px; width: 100%; transition: background 0.12s; }
+  .btn-test:hover { background: #F0F0EC; }
+
+  /* SAVE BAR */
+  .save-bar { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+  .status-msg { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-secondary); }
+  .dot-amber { width: 6px; height: 6px; border-radius: 50%; background: var(--warning-dot); flex-shrink: 0; }
+  .dot-green { width: 6px; height: 6px; border-radius: 50%; background: #639922; flex-shrink: 0; }
+  .save-actions { display: flex; gap: 7px; }
+  .btn-discard { font-family: var(--font); font-size: 13px; padding: 6px 14px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); background: transparent; color: var(--text-secondary); cursor: pointer; transition: background 0.12s; }
+  .btn-discard:hover { background: #F0F0EC; }
+  .btn-save { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 6px 16px; border: none; border-radius: var(--radius-sm); background: var(--accent); color: white; cursor: pointer; transition: background 0.12s; }
+  .btn-save:hover { background: var(--accent-text); }
+  .btn-save:active { transform: scale(0.98); }
+  .last-saved { font-size: 11.5px; color: var(--text-hint); text-align: right; margin-top: 7px; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<header class="topbar">
+  <button class="nav-btn active">Basic<br>Configurations</button>
+  <button class="nav-btn">Upload<br>Headers</button>
+  <button class="nav-btn">Header<br>Mapping</button>
+  <button class="nav-btn">Template<br>Setting</button>
+  <button class="nav-btn">GL<br>Codes</button>
+  <button class="nav-btn">Approval<br>Matrix</button>
+  <button class="nav-btn">Teams</button>
+  <button class="nav-btn">Users</button>
+  <button class="nav-btn">User<br>Rights</button>
+  <button class="nav-btn logout">Logout</button>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-group-label">Basic configuration</div>
+    <div class="sidebar-item active" data-section="general" onclick="sidebarNav('general', this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+      General
+    </div>
+    <div class="sidebar-item" data-section="routing" onclick="sidebarNav('routing', this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8h12M8 2l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Routing &amp; rules
+    </div>
+    <div class="sidebar-item" data-section="access" onclick="sidebarNav('access', this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      User access
+    </div>
+    <div class="sidebar-item" data-section="integration" onclick="sidebarNav('integration', this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="4" width="6" height="8" rx="1"/><rect x="9" y="4" width="6" height="8" rx="1"/><path d="M7 8h2"/></svg>
+      Integration
+    </div>
+    <div class="sidebar-group-label">System</div>
+    <div class="sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2v4M8 10v4M2 8h4M10 8h4" stroke-linecap="round"/></svg>
+      Audit log
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="page-header">
+      <h1>Accounting configuration</h1>
+      <p>Manage system-wide settings. Changes apply immediately after saving.</p>
+    </div>
+
+    <div class="success-banner" id="successBanner">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3B6D11" stroke-width="1.2"/><path d="M5 8l2 2 4-4" stroke="#3B6D11" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="bannerText">Configuration saved successfully.</span>
+    </div>
+
+    <div class="search-wrap">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l3 3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search settings…" oninput="filterSettings(this.value)" />
+    </div>
+
+    <!-- ── SECTION: GENERAL ───────────────────────── -->
+    <div class="section-card" id="card-general">
+      <div class="section-header" onclick="toggleSection('general')">
+        <div class="section-header-left">
+          <div class="sec-icon blue">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+          </div>
+          <div>
+            <div class="sec-title">General</div>
+            <div class="sec-sub">Posting date, baseline date, matching type, currency, duplicates, narration</div>
+          </div>
+        </div>
+        <svg class="chevron open" id="chevron-general" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="section-body open" id="body-general">
+
+        <div class="field-row" data-search="posting date monthly close rules behaviour">
+          <div class="field-meta">
+            <div class="field-label">1. Posting date</div>
+            <div class="field-hint">Monthly close / posting date rules</div>
+          </div>
+          <div class="field-ctrl" style="flex-direction:column;align-items:flex-end;gap:4px">
+            <select onchange="markDirty()">
+              <option>System date</option>
+              <option>Transaction date</option>
+              <option>Monthly close date</option>
+            </select>
+            <span style="font-size:11px;color:var(--text-hint)">Configure posting date behaviour</span>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="baseline date activate payment term">
+          <div class="field-meta">
+            <div class="field-label">2. Baseline date</div>
+            <div class="field-hint">Activate baseline date for payment term calculations</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="toggle-wrap" onclick="toggleSwitch(this)">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+              <span class="toggle-label">Off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="matching type 2-way 3-way invoice verification">
+          <div class="field-meta">
+            <div class="field-label">4. Matching type</div>
+            <div class="field-hint">Choose 3-way or 2-way matching for invoice verification</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="radio-group">
+              <label class="radio-opt"><input type="radio" name="matching" value="3way" checked onchange="markDirty()" /><span>3-way match</span></label>
+              <label class="radio-opt"><input type="radio" name="matching" value="2way" onchange="markDirty()" /><span>2-way match</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="reporting currency INR USD import invoices">
+          <div class="field-meta">
+            <div class="field-label">5. Reporting currency</div>
+            <div class="field-hint">Base currency for all financial reports and statements</div>
+            <div class="dev-note">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#BA7517" stroke-width="1.2"/><path d="M8 7v4" stroke="#BA7517" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="5.5" r="0.7" fill="#BA7517"/></svg>
+              Currently under development to handle import invoices
+            </div>
+          </div>
+          <div class="field-ctrl">
+            <select onchange="markDirty()">
+              <option>INR — Indian rupee</option>
+              <option>USD — US dollar</option>
+              <option>EUR — Euro</option>
+              <option>BHD — Bahraini dinar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="duplicate invoice checking block posting">
+          <div class="field-meta">
+            <div class="field-label">6. Duplicate invoice</div>
+            <div class="field-hint">Enable duplicate invoice checking before posting</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="toggle-wrap" onclick="toggleSwitch(this)">
+              <div class="toggle-track on"><div class="toggle-thumb"></div></div>
+              <span class="toggle-label">On</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="narration string composition format journal">
+          <div class="field-meta">
+            <div class="field-label">7. Narration string</div>
+            <div class="field-hint">Define the narration composition format for journal entries</div>
+          </div>
+          <div class="field-ctrl">
+            <select onchange="markDirty()">
+              <option>Auto-generate</option>
+              <option>Manual</option>
+              <option>Template-based</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION: ROUTING & RULES ──────────────── -->
+    <div class="section-card" id="card-routing">
+      <div class="section-header" onclick="toggleSection('routing')">
+        <div class="section-header-left">
+          <div class="sec-icon green">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8h12M8 2l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="sec-title">Routing &amp; rules</div>
+            <div class="sec-sub">Flags for blocking, unplanned cost, threshold, MIGO, matching logic</div>
+          </div>
+        </div>
+        <svg class="chevron" id="chevron-routing" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="section-body" id="body-routing">
+
+        <div class="field-row" data-search="flags blocking vendor PAN GST parameters payment accounting">
+          <div class="field-meta">
+            <div class="field-label">3. Flags for blocking</div>
+            <div class="field-hint">Rules to block accounting/payment based on vendor PAN/GST parameters</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="radio-group">
+              <label class="radio-opt"><input type="radio" name="blocking" value="pan" onchange="markDirty()" /><span>Block on PAN</span></label>
+              <label class="radio-opt"><input type="radio" name="blocking" value="gst" onchange="markDirty()" /><span>Block on GST</span></label>
+              <label class="radio-opt"><input type="radio" name="blocking" value="both" checked onchange="markDirty()" /><span>Both</span></label>
+              <label class="radio-opt"><input type="radio" name="blocking" value="none" onchange="markDirty()" /><span>None</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="unplanned cost PO stage handle">
+          <div class="field-meta">
+            <div class="field-label">8. Unplanned cost</div>
+            <div class="field-hint">Handle costs not considered at PO stage</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="toggle-wrap" onclick="toggleSwitch(this)">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+              <span class="toggle-label">Off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="threshold check 194Q turnover exceeds defined">
+          <div class="field-meta">
+            <div class="field-label">9. Threshold check (u/s 194Q)</div>
+            <div class="field-hint">Check if turnover exceeds the defined threshold under section 194Q</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="inline-pair">
+              <input type="text" placeholder="Min" value="0.00" onchange="markDirty()" />
+              <input type="text" placeholder="Max" value="9.9" onchange="markDirty()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="service entry MIGO report specify part">
+          <div class="field-meta">
+            <div class="field-label">10. Service entry in MIGO report</div>
+            <div class="field-hint">Specify if Service Entry is part of MIGO processing</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="toggle-wrap" onclick="toggleSwitch(this)">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+              <span class="toggle-label">Off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="matching logic invoice PO">
+          <div class="field-meta">
+            <div class="field-label">11. Matching logic</div>
+            <div class="field-hint">Define the logic applied during invoice-to-PO matching</div>
+          </div>
+          <div class="field-ctrl">
+            <select onchange="markDirty()">
+              <option>Exact match</option>
+              <option>Tolerance-based</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION: USER ACCESS ───────────────────── -->
+    <div class="section-card" id="card-access">
+      <div class="section-header" onclick="toggleSection('access')">
+        <div class="section-header-left">
+          <div class="sec-icon amber">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          </div>
+          <div>
+            <div class="sec-title">User access &amp; rights</div>
+            <div class="sec-sub">Data upload rights, company PAN, material/service codes</div>
+          </div>
+        </div>
+        <svg class="chevron" id="chevron-access" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="section-body" id="body-access">
+
+        <div class="field-row" data-search="data upload rights who can upload">
+          <div class="field-meta">
+            <div class="field-label">12. Data upload rights</div>
+            <div class="field-hint">Define who can upload data into the system</div>
+          </div>
+          <div class="field-ctrl">
+            <div class="radio-group">
+              <label class="radio-opt"><input type="radio" name="upload" value="admin" checked onchange="markDirty()" /><span>Admin only</span></label>
+              <label class="radio-opt"><input type="radio" name="upload" value="creator" onchange="markDirty()" /><span>Creator</span></label>
+              <label class="radio-opt"><input type="radio" name="upload" value="vendor" onchange="markDirty()" /><span>Vendor</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row" data-search="company PAN number enter tax">
+          <div class="field-meta">
+            <div class="field-label">13. Company PAN</div>
+            <div class="field-hint">Enter the PAN number of the company for tax identification</div>
+          </div>
+          <div class="field-ctrl">
+            <input type="text" placeholder="e.g. AABCT1332Q" maxlength="10" onchange="markDirty()" />
+          </div>
+        </div>
+
+        <div class="field-row" data-search="material service codes comma separated each">
+          <div class="field-meta">
+            <div class="field-label">14. Material/service codes</div>
+            <div class="field-hint">Enter codes separated by comma for each material and service</div>
+          </div>
+          <div class="field-ctrl">
+            <textarea placeholder="e.g. MAT001, SVC002, MAT003" onchange="markDirty()"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION: INTEGRATION ───────────────────── -->
+    <div class="section-card" id="card-integration">
+      <div class="section-header" onclick="toggleSection('integration')">
+        <div class="section-header-left">
+          <div class="sec-icon red">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="4" width="6" height="8" rx="1"/><rect x="9" y="4" width="6" height="8" rx="1"/><path d="M7 8h2"/></svg>
+          </div>
+          <div>
+            <div class="sec-title">Integration</div>
+            <div class="sec-sub">MIS login credentials, connection testing</div>
+          </div>
+        </div>
+        <svg class="chevron" id="chevron-integration" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="section-body" id="body-integration">
+
+        <div class="field-row" data-search="MIS login username credentials">
+          <div class="field-meta">
+            <div class="field-label">MIS username</div>
+            <div class="field-hint">Login name for the MIS system connection</div>
+          </div>
+          <div class="field-ctrl">
+            <input type="text" placeholder="Enter username" onchange="markDirty()" />
+          </div>
+        </div>
+
+        <div class="field-row" data-search="MIS password credentials encrypted secure">
+          <div class="field-meta">
+            <div class="field-label">MIS password</div>
+            <div class="field-hint">Stored encrypted — never shown in plain text after saving</div>
+          </div>
+          <div class="field-ctrl" style="flex-direction:column;align-items:flex-end;gap:0">
+            <input type="password" placeholder="••••••••" onchange="markDirty()" />
+            <button class="btn-test" id="testBtn" onclick="testConnection()">Test connection</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAVE BAR -->
+    <div class="save-bar">
+      <div class="status-msg" id="statusMsg">
+        <div class="dot-green"></div>
+        All changes saved
+      </div>
+      <div class="save-actions">
+        <button class="btn-discard" onclick="discardChanges()">Discard</button>
+        <button class="btn-save" onclick="saveConfig()">Save configuration</button>
+      </div>
+    </div>
+    <p class="last-saved" id="lastSaved">Last saved: Apr 28, 2026 at 10:41 AM by Admin</p>
+
+  </main>
+</div>
+
+<script>
+  const ALL_SECTIONS = ['general', 'routing', 'access', 'integration'];
+  let openId = 'general';
+
+  function _open(id) {
+    document.getElementById('body-' + id).classList.add('open');
+    document.getElementById('chevron-' + id).classList.add('open');
+  }
+  function _close(id) {
+    document.getElementById('body-' + id).classList.remove('open');
+    document.getElementById('chevron-' + id).classList.remove('open');
+  }
+  function _setActive(id) {
+    document.querySelectorAll('.sidebar-item[data-section]').forEach(el => {
+      el.classList.toggle('active', el.dataset.section === id);
+    });
+  }
+
+  function toggleSection(id) {
+    if (openId === id) {
+      _close(id);
+      openId = null;
+    } else {
+      if (openId) _close(openId);
+      _open(id);
+      openId = id;
+      _setActive(id);
+    }
+  }
+
+  function sidebarNav(id, el) {
+    if (openId && openId !== id) _close(openId);
+    _open(id);
+    openId = id;
+    _setActive(id);
+    document.getElementById('card-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleSwitch(el) {
+    const track = el.querySelector('.toggle-track');
+    const label = el.querySelector('.toggle-label');
+    track.classList.toggle('on');
+    label.textContent = track.classList.contains('on') ? 'On' : 'Off';
+    markDirty();
+  }
+
+  let dirty = false;
+  function markDirty() {
+    dirty = true;
+    document.getElementById('statusMsg').innerHTML = '<div class="dot-amber"></div> Unsaved changes';
+  }
+  function discardChanges() {
+    dirty = false;
+    document.getElementById('statusMsg').innerHTML = '<div class="dot-green"></div> All changes saved';
+  }
+  function saveConfig() {
+    dirty = false;
+    const now = new Date();
+    const ts = now.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('statusMsg').innerHTML = '<div class="dot-green"></div> All changes saved';
+    document.getElementById('lastSaved').textContent = 'Last saved: ' + ts + ' by Admin';
+    document.getElementById('bannerText').textContent = 'Configuration saved — ' + ts + ' by Admin';
+    const b = document.getElementById('successBanner');
+    b.classList.add('show');
+    setTimeout(() => b.classList.remove('show'), 4500);
+  }
+  function testConnection() {
+    const btn = document.getElementById('testBtn');
+    btn.textContent = 'Testing…';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Connected';
+      btn.style.cssText = 'color:#3B6D11;border-color:#97C459;background:#EAF3DE';
+      setTimeout(() => {
+        btn.textContent = 'Test connection';
+        btn.style.cssText = '';
+        btn.disabled = false;
+      }, 2500);
+    }, 1200);
+  }
+  function filterSettings(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('.field-row').forEach(row => {
+      const text = ((row.dataset.search || '') + ' ' + row.innerText).toLowerCase();
+      row.classList.toggle('hidden', q.length > 0 && !text.includes(q));
+    });
+    if (q.length > 0) {
+      ALL_SECTIONS.forEach(id => { _open(id); });
+    }
+  }
+</script>
+</body>
+</html>
